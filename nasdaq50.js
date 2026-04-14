@@ -238,33 +238,17 @@
     return s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
   }
 
+  var CALL_API = "https://154.17.29.16:3457/api/call";
+
   async function makeCall(phone, message) {
-    var sid = localStorage.getItem(TWILIO_SID_KEY) || "";
-    var token = localStorage.getItem(TWILIO_TOKEN_KEY) || "";
-    var from = localStorage.getItem(TWILIO_FROM_KEY) || "";
-
-    if (!sid || !token || !from) {
-      throw new Error("请先在设置页面配置 Twilio 凭证");
-    }
-
-    var twiml = '<Response><Say language="zh-CN">' + escapeXml(message) + '</Say><Pause length="1"/><Say language="zh-CN">' + escapeXml(message) + '</Say></Response>';
-    var url = "https://api.twilio.com/2010-04-01/Accounts/" + sid + "/Calls.json";
-    var body = new URLSearchParams({ To: phone, From: from, Twiml: twiml });
-
-    var resp = await fetch(url, {
+    var resp = await fetch(CALL_API, {
       method: "POST",
-      headers: {
-        Authorization: "Basic " + btoa(sid + ":" + token),
-        "Content-Type": "application/x-www-form-urlencoded"
-      },
-      body: body
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ phone: phone, message: message })
     });
-
-    if (!resp.ok) {
-      var errBody = await resp.text();
-      throw new Error("Twilio " + resp.status + ": " + errBody.slice(0, 200));
-    }
-    return resp.json();
+    var data = await resp.json();
+    if (!resp.ok) throw new Error(data.error || "Call failed");
+    return data;
   }
 
   // ── Alert logic ──
@@ -408,23 +392,6 @@
   twilioLink.className = "btn btn-outline";
   twilioLink.type = "button";
   twilioLink.textContent = "配置 Twilio 凭证";
-  twilioLink.style.marginTop = "10px";
-  twilioLink.addEventListener("click", showTwilioSetup);
-  $("configCard").appendChild(twilioLink);
-
-  function showTwilioSetup() {
-    var sid = prompt("Twilio Account SID (AC...)", localStorage.getItem(TWILIO_SID_KEY) || "");
-    if (!sid) return;
-    var token = prompt("Twilio Auth Token", "");
-    if (!token) return;
-    var from = prompt("Twilio 号码 (如 +12025551234)", localStorage.getItem(TWILIO_FROM_KEY) || "");
-    if (!from) return;
-    localStorage.setItem(TWILIO_SID_KEY, sid.trim());
-    localStorage.setItem(TWILIO_TOKEN_KEY, token.trim());
-    localStorage.setItem(TWILIO_FROM_KEY, from.trim());
-    showToast("Twilio 配置已保存");
-  }
-
   // ── Request notification permission ──
   if ("Notification" in window && Notification.permission === "default") {
     Notification.requestPermission();
@@ -455,12 +422,6 @@
     mainContent.classList.remove("hidden");
   }
 
-  // Pre-fill setup from existing Twilio config (shared with SPY app)
-  var existingSid = localStorage.getItem(TWILIO_SID_KEY);
-  var existingFrom = localStorage.getItem(TWILIO_FROM_KEY);
-  if (existingSid) setupSid.value = existingSid;
-  if (existingFrom) setupFrom.value = existingFrom;
-
   setupSubmit.addEventListener("click", function () {
     var phone = setupPhone.value.trim();
     if (!phone) { showToast("请填写电话号码", true); return; }
@@ -468,10 +429,6 @@
     phoneInput.value = phone;
     thresholdInput.value = setupThreshold.value;
     intervalInput.value = setupInterval.value;
-
-    if (setupSid.value.trim()) localStorage.setItem(TWILIO_SID_KEY, setupSid.value.trim());
-    if (setupToken.value.trim()) localStorage.setItem(TWILIO_TOKEN_KEY, setupToken.value.trim());
-    if (setupFrom.value.trim()) localStorage.setItem(TWILIO_FROM_KEY, setupFrom.value.trim());
 
     saveConfig();
     showMain();
