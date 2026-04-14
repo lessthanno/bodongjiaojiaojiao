@@ -352,8 +352,99 @@
   });
   configCard.appendChild(twilioLink);
 
+  // ── Setup Screen ──
+  const setupOverlay = $("setupOverlay");
+  const mainContent = $("mainContent");
+  const setupPhone = $("setupPhone");
+  const setupSid = $("setupSid");
+  const setupToken = $("setupToken");
+  const setupFrom = $("setupFrom");
+  const setupThreshold = $("setupThreshold");
+  const setupInterval = $("setupInterval");
+  const setupRedial = $("setupRedial");
+  const setupMaxRedial = $("setupMaxRedial");
+  const setupSubmit = $("setupSubmit");
+  const setupSkip = $("setupSkip");
+
+  function hasExistingConfig() {
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if (!raw) return false;
+      const c = JSON.parse(raw);
+      return !!(c.phone && c.phone.trim());
+    } catch (_) { return false; }
+  }
+
+  function prefillSetup() {
+    const sid = localStorage.getItem("bodongjiaojiaojiao.twilio_sid") || "";
+    const token = localStorage.getItem("bodongjiaojiaojiao.twilio_token") || "";
+    const from = localStorage.getItem("bodongjiaojiaojiao.twilio_from") || "";
+    if (sid) setupSid.value = sid;
+    if (token) setupToken.value = token;
+    if (from) setupFrom.value = from;
+
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if (raw) {
+        const c = JSON.parse(raw);
+        if (c.phone) setupPhone.value = c.phone;
+        if (c.threshold) setupThreshold.value = c.threshold;
+        if (c.interval) setupInterval.value = c.interval;
+        if (c.redial) setupRedial.value = c.redial;
+        if (c.maxRedial) setupMaxRedial.value = c.maxRedial;
+      }
+    } catch (_) {}
+  }
+
+  function showMain() {
+    setupOverlay.classList.add("hidden");
+    mainContent.classList.remove("hidden");
+  }
+
+  function validateSetup() {
+    const phone = setupPhone.value.trim();
+    const sid = setupSid.value.trim();
+    const token = setupToken.value.trim();
+    const from = setupFrom.value.trim();
+    setupSubmit.disabled = !(phone.length >= 5 && sid && token && from);
+  }
+
+  [setupPhone, setupSid, setupToken, setupFrom].forEach(function (el) {
+    el.addEventListener("input", validateSetup);
+  });
+
+  setupSubmit.addEventListener("click", function () {
+    const phone = setupPhone.value.trim();
+    if (!phone) return;
+
+    localStorage.setItem("bodongjiaojiaojiao.twilio_sid", setupSid.value.trim());
+    localStorage.setItem("bodongjiaojiaojiao.twilio_token", setupToken.value.trim());
+    localStorage.setItem("bodongjiaojiaojiao.twilio_from", setupFrom.value.trim());
+
+    phoneInput.value = phone;
+    thresholdInput.value = setupThreshold.value;
+    intervalInput.value = setupInterval.value;
+    redialInput.value = setupRedial.value;
+    maxRedialInput.value = setupMaxRedial.value;
+    saveConfig();
+
+    showMain();
+    showToast("配置已保存，可以启动监控了");
+  });
+
+  setupSkip.addEventListener("click", function () {
+    showMain();
+  });
+
   // ── Boot ──
   loadConfig();
+  prefillSetup();
+  validateSetup();
+
+  if (hasExistingConfig()) {
+    showMain();
+  }
+
   poll();
   render();
   setInterval(render, 1000);

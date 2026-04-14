@@ -215,10 +215,185 @@
       font-size: 12px; color: rgba(157,176,200,0.5);
       line-height: 1.6;
     }
+
+    /* ── Setup Screen ── */
+    .setup-overlay {
+      position: fixed; inset: 0; z-index: 100;
+      background:
+        radial-gradient(ellipse at 30% 20%, rgba(73,195,255,0.12), transparent 55%),
+        radial-gradient(ellipse at 70% 80%, rgba(124,92,255,0.10), transparent 50%),
+        linear-gradient(180deg, #050b16, var(--bg) 50%, #09131f);
+      display: flex; align-items: center; justify-content: center;
+      padding: 24px;
+      overflow-y: auto;
+    }
+    .setup-overlay.hidden { display: none; }
+
+    .setup-box {
+      width: min(460px, 100%);
+      animation: setupFadeIn 0.5s ease-out;
+    }
+    @keyframes setupFadeIn {
+      from { opacity: 0; transform: translateY(24px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .setup-hero {
+      text-align: center; margin-bottom: 32px;
+    }
+    .setup-logo {
+      width: 64px; height: 64px; border-radius: 20px;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      margin: 0 auto 16px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 28px;
+      box-shadow: 0 16px 48px rgba(73,195,255,0.25);
+    }
+    .setup-hero h1 {
+      font-size: 26px; font-weight: 900; letter-spacing: -0.02em;
+    }
+    .setup-hero p {
+      font-size: 14px; color: var(--muted); margin-top: 8px; line-height: 1.6;
+    }
+
+    .setup-card {
+      padding: 24px; border-radius: var(--radius);
+      border: 1px solid var(--line);
+      background: linear-gradient(180deg, rgba(14,25,42,0.95), rgba(8,17,32,0.85));
+      box-shadow: 0 32px 64px rgba(2,8,20,0.5);
+    }
+    .setup-card .section-title {
+      font-size: 13px; font-weight: 700; color: var(--accent);
+      text-transform: uppercase; letter-spacing: 0.06em;
+      margin-bottom: 14px; display: flex; align-items: center; gap: 6px;
+    }
+    .setup-card .section-title:not(:first-child) {
+      margin-top: 20px; padding-top: 18px;
+      border-top: 1px solid var(--line);
+    }
+
+    .setup-phone-input {
+      width: 100%; padding: 16px 18px;
+      border-radius: 14px; border: 2px solid var(--line);
+      background: rgba(255,255,255,0.04); color: var(--text);
+      font-size: 20px; font-weight: 700; letter-spacing: 0.02em;
+      outline: none; transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .setup-phone-input:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 4px rgba(73,195,255,0.12);
+    }
+    .setup-phone-input::placeholder { font-weight: 400; color: rgba(157,176,200,0.4); }
+
+    .setup-params {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 12px;
+    }
+    .setup-param {
+      padding: 14px; border-radius: 14px;
+      border: 1px solid var(--line); background: rgba(255,255,255,0.02);
+    }
+    .setup-param label {
+      display: block; font-size: 12px; color: var(--muted); margin-bottom: 6px;
+    }
+    .setup-param input {
+      width: 100%; padding: 8px 0; border: none; border-bottom: 1px solid var(--line);
+      background: transparent; color: var(--text);
+      font-size: 18px; font-weight: 700; outline: none;
+      transition: border-color 0.2s;
+    }
+    .setup-param input:focus { border-color: var(--accent); }
+    .setup-param .unit { font-size: 12px; color: var(--muted); margin-top: 2px; }
+
+    .setup-submit {
+      margin-top: 20px; width: 100%; min-height: 56px; padding: 0 24px;
+      border-radius: 16px; border: none; cursor: pointer;
+      font-size: 16px; font-weight: 800;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      color: #04111f;
+      box-shadow: 0 16px 40px rgba(73,195,255,0.25);
+      transition: opacity 0.15s, transform 0.1s;
+    }
+    .setup-submit:active { transform: scale(0.97); }
+    .setup-submit:disabled { opacity: 0.4; cursor: not-allowed; }
+
+    .setup-skip {
+      display: block; margin: 14px auto 0; padding: 8px 16px;
+      border: none; background: none; cursor: pointer;
+      font-size: 13px; color: var(--muted);
+      transition: color 0.2s;
+    }
+    .setup-skip:hover { color: var(--text); }
+
+    .main-content.hidden { display: none; }
   </style>
 </head>
 <body>
-  <div class="shell">
+  <!-- Setup Screen -->
+  <div class="setup-overlay" id="setupOverlay">
+    <div class="setup-box">
+      <div class="setup-hero">
+        <div class="setup-logo">📞</div>
+        <h1>波动叫叫叫</h1>
+        <p>SPY 涨跌幅达到阈值，自动打电话叫醒你<br/>先完成基础配置，1 分钟即可开始监控</p>
+      </div>
+      <div class="setup-card">
+        <div class="section-title">📱 接收电话的号码</div>
+        <input
+          class="setup-phone-input"
+          id="setupPhone"
+          type="tel"
+          placeholder="+8613800138000"
+          autocomplete="tel"
+        />
+        <div class="hint" style="margin-top:8px">含国际区号，SPY 越线时系统拨打此号码</div>
+
+        <div class="section-title">🔑 Twilio 凭证</div>
+        <div class="field" style="margin-bottom:10px">
+          <label for="setupSid">Account SID</label>
+          <input id="setupSid" type="text" placeholder="ACxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx" autocomplete="off" />
+        </div>
+        <div class="field" style="margin-bottom:10px">
+          <label for="setupToken">Auth Token</label>
+          <input id="setupToken" type="password" placeholder="你的 Auth Token" autocomplete="off" />
+        </div>
+        <div class="field" style="margin-bottom:0">
+          <label for="setupFrom">Twilio 号码（发起呼叫的号码）</label>
+          <input id="setupFrom" type="tel" placeholder="+12025551234" autocomplete="off" />
+          <div class="hint">在 twilio.com/console 获取，凭证仅保存在你的浏览器中</div>
+        </div>
+
+        <div class="section-title">⚙️ 监控参数</div>
+        <div class="setup-params">
+          <div class="setup-param">
+            <label>告警阈值</label>
+            <input id="setupThreshold" type="number" value="3" min="0.5" max="20" step="0.5" />
+            <div class="unit">% · 涨跌幅超过此值触发</div>
+          </div>
+          <div class="setup-param">
+            <label>轮询间隔</label>
+            <input id="setupInterval" type="number" value="30" min="10" max="300" step="10" />
+            <div class="unit">秒 · 多久检查一次行情</div>
+          </div>
+          <div class="setup-param">
+            <label>重拨间隔</label>
+            <input id="setupRedial" type="number" value="60" min="30" max="600" step="30" />
+            <div class="unit">秒 · 未接听则重拨</div>
+          </div>
+          <div class="setup-param">
+            <label>最大重拨</label>
+            <input id="setupMaxRedial" type="number" value="5" min="1" max="30" step="1" />
+            <div class="unit">分钟 · 超时后停止重拨</div>
+          </div>
+        </div>
+
+        <button class="setup-submit" id="setupSubmit" type="button" disabled>保存并进入监控</button>
+      </div>
+      <button class="setup-skip" id="setupSkip" type="button">跳过，稍后配置 →</button>
+    </div>
+  </div>
+
+  <!-- Main Content -->
+  <div class="shell main-content hidden" id="mainContent">
     <div class="header">
       <div class="brand">
         <div class="brand-dot"></div>
@@ -328,7 +503,7 @@
       波动叫叫叫 · SPY 电话告警系统<br />
       行情来源 Yahoo Finance · 每次部署 & 定时刷新
     </div>
-  </div>
+  </div><!-- .main-content -->
 
   <div class="toast" id="toast"></div>
 
