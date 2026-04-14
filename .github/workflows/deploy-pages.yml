@@ -42,6 +42,65 @@ jobs:
             test -s quotes/last.json
           fi
 
+      - name: Check SPY alert threshold & call if breached
+        if: always()
+        shell: bash
+        env:
+          TWILIO_SID: ${{ secrets.TWILIO_SID }}
+          TWILIO_TOKEN: ${{ secrets.TWILIO_TOKEN }}
+          TWILIO_FROM: ${{ secrets.TWILIO_FROM }}
+          ALERT_PHONE: ${{ secrets.ALERT_PHONE }}
+          ALERT_THRESHOLD: "3"
+        run: |
+          set -euo pipefail
+          if [ ! -f quotes/last.json ]; then
+            echo "No quote data, skipping alert check"
+            exit 0
+          fi
+          if [ -z "$TWILIO_SID" ] || [ -z "$ALERT_PHONE" ]; then
+            echo "Twilio secrets not configured, skipping"
+            exit 0
+          fi
+
+          CHANGE=$(python3 -c "import json; d=json.load(open('quotes/last.json')); print(d.get('changePercent', 0))")
+          ABS_CHANGE=$(python3 -c "print(abs($CHANGE))")
+          THRESHOLD=${ALERT_THRESHOLD}
+
+          echo "SPY change: ${CHANGE}% | Threshold: ±${THRESHOLD}%"
+
+          BREACH=$(python3 -c "print('yes' if $ABS_CHANGE >= $THRESHOLD else 'no')")
+          if [ "$BREACH" != "yes" ]; then
+            echo "Within threshold, no alert needed"
+            exit 0
+          fi
+
+          echo "🚨 THRESHOLD BREACHED! Calling ${ALERT_PHONE}..."
+          SIGN=$(python3 -c "print('+' if $CHANGE >= 0 else '')")
+          MSG="注意，SPY 当前涨跌幅 ${SIGN}${CHANGE}%，已超过 ${THRESHOLD}% 告警阈值，请立即查看。"
+          TWIML="<Response><Say language=\"zh-CN\">${MSG}</Say><Pause length=\"1\"/><Say language=\"zh-CN\">${MSG}</Say></Response>"
+
+          curl -s -X POST "https://api.twilio.com/2010-04-01/Accounts/${TWILIO_SID}/Calls.json" \
+            -u "${TWILIO_SID}:${TWILIO_TOKEN}" \
+            --data-urlencode "To=${ALERT_PHONE}" \
+            --data-urlencode "From=${TWILIO_FROM}" \
+            --data-urlencode "Twiml=${TWIML}" \
+            -o /tmp/twilio-resp.json -w "%{http_code}" | {
+              read HTTP_CODE
+              if [ "$HTTP_CODE" = "201" ]; then
+                echo "✅ Call initiated successfully"
+                cat /tmp/twilio-resp.json | python3 -c "import sys,json; print('Call SID:', json.load(sys.stdin).get('sid','?'))"
+              else
+                echo "❌ Twilio returned HTTP $HTTP_CODE"
+                cat /tmp/twilio-resp.json
+              fi
+            }
+
+      - name: Refresh NASDAQ-50 snapshot (Yahoo → quotes/nasdaq50.json)
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 scripts/update_nasdaq50.py quotes/nasdaq50.json || echo "::warning::NASDAQ-50 拉取失败，沿用已有 quotes/nasdaq50.json"
+
       - name: Configure Pages
         uses: actions/configure-pages@v5
 

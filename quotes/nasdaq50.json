@@ -1,0 +1,402 @@
+[
+  {
+    "symbol": "AAPL",
+    "name": "Apple Inc.",
+    "price": 259.2,
+    "high52w": 288.62,
+    "low52w": 189.81,
+    "dayChange": 0.1313
+  },
+  {
+    "symbol": "ABNB",
+    "name": "Airbnb, Inc.",
+    "price": 130.32,
+    "high52w": 143.88,
+    "low52w": 109.79,
+    "dayChange": 2.7679
+  },
+  {
+    "symbol": "ADBE",
+    "name": "Adobe Inc.",
+    "price": 240.11,
+    "high52w": 422.95,
+    "low52w": 224.13,
+    "dayChange": -1.7392
+  },
+  {
+    "symbol": "ADI",
+    "name": "Analog Devices, Inc.",
+    "price": 350.01,
+    "high52w": 363.2,
+    "low52w": 170.39,
+    "dayChange": 6.919
+  },
+  {
+    "symbol": "ADP",
+    "name": "Automatic Data Processing, Inc.",
+    "price": 195.38,
+    "high52w": 329.93,
+    "low52w": 188.16,
+    "dayChange": -4.3848
+  },
+  {
+    "symbol": "AMAT",
+    "name": "Applied Materials, Inc.",
+    "price": 395.73,
+    "high52w": 407.29,
+    "low52w": 132.8,
+    "dayChange": 12.2256
+  },
+  {
+    "symbol": "AMD",
+    "name": "Advanced Micro Devices, Inc.",
+    "price": 246.83,
+    "high52w": 267.08,
+    "low52w": 83.75,
+    "dayChange": 12.1037
+  },
+  {
+    "symbol": "AMGN",
+    "name": "Amgen Inc.",
+    "price": 349.82,
+    "high52w": 391.29,
+    "low52w": 261.43,
+    "dayChange": 2.1164
+  },
+  {
+    "symbol": "AMZN",
+    "name": "Amazon.com, Inc.",
+    "price": 239.89,
+    "high52w": 258.6,
+    "low52w": 165.29,
+    "dayChange": 12.7356
+  },
+  {
+    "symbol": "AVGO",
+    "name": "Broadcom Inc.",
+    "price": 379.75,
+    "high52w": 414.61,
+    "low52w": 161.61,
+    "dayChange": 20.7741
+  },
+  {
+    "symbol": "BKNG",
+    "name": "Booking Holdings Inc. Common St",
+    "price": 177.25,
+    "high52w": 233.58,
+    "low52w": 150.62,
+    "dayChange": 0.6016
+  },
+  {
+    "symbol": "CDNS",
+    "name": "Cadence Design Systems, Inc.",
+    "price": 288.2,
+    "high52w": 376.45,
+    "low52w": 247.7,
+    "dayChange": 3.1533
+  },
+  {
+    "symbol": "CEG",
+    "name": "Constellation Energy Corporatio",
+    "price": 291.72,
+    "high52w": 412.7,
+    "low52w": 188.01,
+    "dayChange": 6.0183
+  },
+  {
+    "symbol": "CMCSA",
+    "name": "Comcast Corporation",
+    "price": 28.05,
+    "high52w": 34.36,
+    "low52w": 24.13,
+    "dayChange": 1.41
+  },
+  {
+    "symbol": "COST",
+    "name": "Costco Wholesale Corporation",
+    "price": 980.85,
+    "high52w": 1067.08,
+    "low52w": 844.06,
+    "dayChange": -3.7013
+  },
+  {
+    "symbol": "CRWD",
+    "name": "CrowdStrike Holdings, Inc.",
+    "price": 402.24,
+    "high52w": 566.9,
+    "low52w": 342.72,
+    "dayChange": 0.9107
+  },
+  {
+    "symbol": "CSCO",
+    "name": "Cisco Systems, Inc.",
+    "price": 82.35,
+    "high52w": 88.19,
+    "low52w": 53.83,
+    "dayChange": 2.3744
+  },
+  {
+    "symbol": "CTAS",
+    "name": "Cintas Corporation",
+    "price": 175.68,
+    "high52w": 229.24,
+    "low52w": 165.6,
+    "dayChange": 2.324
+  },
+  {
+    "symbol": "DASH",
+    "name": "DoorDash, Inc.",
+    "price": 159.61,
+    "high52w": 285.5,
+    "low52w": 143.3,
+    "dayChange": 2.9277
+  },
+  {
+    "symbol": "FTNT",
+    "name": "Fortinet, Inc.",
+    "price": 78.74,
+    "high52w": 109.33,
+    "low52w": 70.12,
+    "dayChange": -4.314
+  },
+  {
+    "symbol": "GILD",
+    "name": "Gilead Sciences, Inc.",
+    "price": 139.03,
+    "high52w": 157.29,
+    "low52w": 93.37,
+    "dayChange": -0.785
+  },
+  {
+    "symbol": "GOOG",
+    "name": "Alphabet Inc.",
+    "price": 319.21,
+    "high52w": 350.15,
+    "low52w": 148.4,
+    "dayChange": 7.2398
+  },
+  {
+    "symbol": "GOOGL",
+    "name": "Alphabet Inc.",
+    "price": 321.31,
+    "high52w": 349.0,
+    "low52w": 146.1,
+    "dayChange": 7.1069
+  },
+  {
+    "symbol": "HON",
+    "name": "Honeywell International Inc.",
+    "price": 233.64,
+    "high52w": 248.18,
+    "low52w": 181.07,
+    "dayChange": 2.3794
+  },
+  {
+    "symbol": "INTU",
+    "name": "Intuit Inc.",
+    "price": 369.44,
+    "high52w": 813.7,
+    "low52w": 342.11,
+    "dayChange": -11.4817
+  },
+  {
+    "symbol": "ISRG",
+    "name": "Intuitive Surgical, Inc.",
+    "price": 458.96,
+    "high52w": 603.88,
+    "low52w": 427.84,
+    "dayChange": 1.4097
+  },
+  {
+    "symbol": "KLAC",
+    "name": "KLA Corporation",
+    "price": 1768.78,
+    "high52w": 1771.82,
+    "low52w": 607.7,
+    "dayChange": 14.8514
+  },
+  {
+    "symbol": "LIN",
+    "name": "Linde plc",
+    "price": 508.87,
+    "high52w": 510.65,
+    "low52w": 387.78,
+    "dayChange": 1.882
+  },
+  {
+    "symbol": "LRCX",
+    "name": "Lam Research Corporation",
+    "price": 267.32,
+    "high52w": 268.23,
+    "low52w": 61.14,
+    "dayChange": 21.1511
+  },
+  {
+    "symbol": "MAR",
+    "name": "Marriott International",
+    "price": 359.56,
+    "high52w": 370.0,
+    "low52w": 212.53,
+    "dayChange": 6.3787
+  },
+  {
+    "symbol": "MDLZ",
+    "name": "Mondelez International, Inc.",
+    "price": 57.68,
+    "high52w": 71.15,
+    "low52w": 51.2,
+    "dayChange": -1.199
+  },
+  {
+    "symbol": "MELI",
+    "name": "MercadoLibre, Inc.",
+    "price": 1831.93,
+    "high52w": 2645.22,
+    "low52w": 1593.21,
+    "dayChange": 7.1072
+  },
+  {
+    "symbol": "META",
+    "name": "Meta Platforms, Inc.",
+    "price": 634.53,
+    "high52w": 796.25,
+    "low52w": 479.8,
+    "dayChange": 10.7344
+  },
+  {
+    "symbol": "MRVL",
+    "name": "Marvell Technology, Inc.",
+    "price": 131.3,
+    "high52w": 133.2,
+    "low52w": 48.09,
+    "dayChange": 19.8977
+  },
+  {
+    "symbol": "MSFT",
+    "name": "Microsoft Corporation",
+    "price": 384.37,
+    "high52w": 555.45,
+    "low52w": 355.67,
+    "dayChange": 3.0814
+  },
+  {
+    "symbol": "MU",
+    "name": "Micron Technology, Inc.",
+    "price": 426.56,
+    "high52w": 471.34,
+    "low52w": 65.65,
+    "dayChange": 12.9183
+  },
+  {
+    "symbol": "NFLX",
+    "name": "Netflix, Inc.",
+    "price": 103.16,
+    "high52w": 134.12,
+    "low52w": 75.01,
+    "dayChange": 4.2758
+  },
+  {
+    "symbol": "NVDA",
+    "name": "NVIDIA Corporation",
+    "price": 189.31,
+    "high52w": 212.19,
+    "low52w": 95.04,
+    "dayChange": 6.5695
+  },
+  {
+    "symbol": "ORLY",
+    "name": "O'Reilly Automotive, Inc.",
+    "price": 94.01,
+    "high52w": 108.72,
+    "low52w": 86.77,
+    "dayChange": 2.0406
+  },
+  {
+    "symbol": "PANW",
+    "name": "Palo Alto Networks, Inc.",
+    "price": 162.51,
+    "high52w": 223.61,
+    "low52w": 139.57,
+    "dayChange": 0.3458
+  },
+  {
+    "symbol": "PEP",
+    "name": "Pepsico, Inc.",
+    "price": 155.88,
+    "high52w": 171.48,
+    "low52w": 127.6,
+    "dayChange": -0.5423
+  },
+  {
+    "symbol": "PYPL",
+    "name": "PayPal Holdings, Inc.",
+    "price": 47.51,
+    "high52w": 79.5,
+    "low52w": 38.46,
+    "dayChange": 4.4635
+  },
+  {
+    "symbol": "QCOM",
+    "name": "QUALCOMM Incorporated",
+    "price": 131.24,
+    "high52w": 205.95,
+    "low52w": 121.99,
+    "dayChange": 4.3824
+  },
+  {
+    "symbol": "REGN",
+    "name": "Regeneron Pharmaceuticals, Inc.",
+    "price": 746.46,
+    "high52w": 821.11,
+    "low52w": 476.49,
+    "dayChange": -2.1729
+  },
+  {
+    "symbol": "SBUX",
+    "name": "Starbucks Corporation",
+    "price": 97.48,
+    "high52w": 104.82,
+    "low52w": 75.5,
+    "dayChange": 2.8487
+  },
+  {
+    "symbol": "SNPS",
+    "name": "Synopsys, Inc.",
+    "price": 417.77,
+    "high52w": 651.73,
+    "low52w": 376.18,
+    "dayChange": 5.2132
+  },
+  {
+    "symbol": "TMUS",
+    "name": "T-Mobile US, Inc.",
+    "price": 192.43,
+    "high52w": 267.96,
+    "low52w": 181.36,
+    "dayChange": -3.1116
+  },
+  {
+    "symbol": "TSLA",
+    "name": "Tesla, Inc.",
+    "price": 352.42,
+    "high52w": 498.83,
+    "low52w": 222.79,
+    "dayChange": -0.1134
+  },
+  {
+    "symbol": "TXN",
+    "name": "Texas Instruments Incorporated",
+    "price": 216.71,
+    "high52w": 231.32,
+    "low52w": 142.56,
+    "dayChange": 8.6701
+  },
+  {
+    "symbol": "VRTX",
+    "name": "Vertex Pharmaceuticals Incorpor",
+    "price": 440.05,
+    "high52w": 510.77,
+    "low52w": 362.5,
+    "dayChange": 1.324
+  }
+]

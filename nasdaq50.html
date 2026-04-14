@@ -1,0 +1,459 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="description" content="纳斯达克 50 跌幅监控 — 52 周高点回撤超 30% 自动打电话提醒" />
+  <meta name="theme-color" content="#050914" />
+  <link rel="icon" href="./favicon.svg" type="image/svg+xml" />
+  <title>纳斯达克 50 跌幅监控</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #081120;
+      --panel: rgba(12, 23, 40, 0.82);
+      --line: rgba(148, 163, 184, 0.14);
+      --text: #f5f7fb;
+      --muted: #9db0c8;
+      --accent: #49c3ff;
+      --accent2: #7c5cff;
+      --green: #2bd576;
+      --red: #ff6b6b;
+      --orange: #ffa94d;
+      --yellow: #ffd43b;
+      --radius: 20px;
+    }
+    * { box-sizing: border-box; margin: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Helvetica Neue", sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(ellipse at 20% 0%, rgba(255,107,107,0.10), transparent 50%),
+        radial-gradient(ellipse at 80% 0%, rgba(124,92,255,0.12), transparent 45%),
+        linear-gradient(180deg, #050b16, var(--bg) 50%, #09131f);
+      min-height: 100dvh;
+    }
+    a { color: var(--accent); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    button, input, select { font: inherit; }
+
+    .shell {
+      width: min(600px, calc(100% - 24px));
+      margin: 0 auto;
+      padding: calc(env(safe-area-inset-top, 0px) + 16px) 0
+               calc(env(safe-area-inset-bottom, 0px) + 32px);
+    }
+
+    /* ── Header ── */
+    .header {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 12px 0;
+    }
+    .brand { display: flex; align-items: center; gap: 10px; font-weight: 800; font-size: 17px; }
+    .brand-dot {
+      width: 28px; height: 28px; border-radius: 10px;
+      background: linear-gradient(135deg, var(--red), var(--orange));
+    }
+    .header-right { display: flex; align-items: center; gap: 10px; }
+    .nav-link {
+      font-size: 12px; padding: 6px 12px; border-radius: 99px;
+      border: 1px solid var(--line); background: rgba(255,255,255,0.03);
+      color: var(--muted); font-weight: 600;
+    }
+    .status-pill {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 6px 14px; border-radius: 999px; font-size: 12px; font-weight: 600;
+      border: 1px solid var(--line); background: rgba(255,255,255,0.03);
+    }
+    .status-pill .dot {
+      width: 7px; height: 7px; border-radius: 99px; background: var(--muted);
+    }
+    .status-pill.live .dot { background: var(--green); box-shadow: 0 0 0 4px rgba(43,213,118,0.15); }
+    .status-pill.alert .dot { background: var(--red); box-shadow: 0 0 0 4px rgba(255,107,107,0.2); animation: pulse 1.5s infinite; }
+    @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.4; } }
+
+    /* ── Hero Card ── */
+    .hero-card {
+      margin-top: 16px; padding: 24px 20px;
+      border-radius: var(--radius); border: 1px solid var(--line);
+      background: linear-gradient(180deg, rgba(14,25,42,0.95), rgba(8,17,32,0.85));
+      box-shadow: 0 32px 64px rgba(2,8,20,0.5);
+    }
+    .hero-label { font-size: 13px; color: var(--muted); margin-bottom: 6px; }
+    .hero-count {
+      font-size: clamp(40px, 10vw, 60px); font-weight: 900;
+      letter-spacing: -0.04em; line-height: 1;
+    }
+    .hero-count.danger { color: var(--red); }
+    .hero-count.safe { color: var(--green); }
+    .hero-sub {
+      display: flex; flex-wrap: wrap; gap: 12px; margin-top: 10px;
+      font-size: 13px; color: var(--muted);
+    }
+
+    /* ── Metric Grid ── */
+    .metrics { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 14px; }
+    .metric {
+      padding: 14px 16px; border-radius: 16px;
+      border: 1px solid var(--line); background: var(--panel);
+    }
+    .metric .label { font-size: 12px; color: var(--muted); }
+    .metric .value { font-size: 17px; font-weight: 800; margin-top: 4px; }
+
+    /* ── Section Card ── */
+    .card {
+      margin-top: 14px; padding: 20px;
+      border-radius: var(--radius); border: 1px solid var(--line);
+      background: var(--panel);
+    }
+    .card h2 {
+      font-size: 16px; font-weight: 700; margin-bottom: 16px;
+      display: flex; align-items: center; gap: 8px;
+    }
+
+    /* ── Stock List ── */
+    .stock-grid { display: flex; flex-direction: column; gap: 6px; }
+    .stock-row {
+      display: grid; grid-template-columns: 80px 1fr 80px 70px;
+      align-items: center; gap: 8px;
+      padding: 10px 14px; border-radius: 12px;
+      border: 1px solid var(--line); background: rgba(255,255,255,0.02);
+      font-size: 13px;
+    }
+    .stock-row.alert-row {
+      border-color: rgba(255,107,107,0.3);
+      background: rgba(255,107,107,0.06);
+    }
+    .stock-row.warn-row {
+      border-color: rgba(255,169,77,0.2);
+      background: rgba(255,169,77,0.04);
+    }
+    .stock-symbol { font-weight: 800; font-size: 14px; }
+    .stock-bar-wrap {
+      height: 6px; border-radius: 99px; background: rgba(255,255,255,0.06);
+      overflow: hidden;
+    }
+    .stock-bar {
+      height: 100%; border-radius: 99px;
+      transition: width 0.5s ease;
+    }
+    .stock-bar.lv-safe { background: var(--green); }
+    .stock-bar.lv-watch { background: var(--yellow); }
+    .stock-bar.lv-warn { background: var(--orange); }
+    .stock-bar.lv-danger { background: var(--red); }
+    .stock-price { text-align: right; color: var(--muted); }
+    .stock-dd { text-align: right; font-weight: 700; }
+    .stock-dd.lv-safe { color: var(--green); }
+    .stock-dd.lv-watch { color: var(--yellow); }
+    .stock-dd.lv-warn { color: var(--orange); }
+    .stock-dd.lv-danger { color: var(--red); }
+
+    .stock-header {
+      display: grid; grid-template-columns: 80px 1fr 80px 70px;
+      gap: 8px; padding: 4px 14px; font-size: 11px; color: var(--muted);
+      text-transform: uppercase; letter-spacing: 0.05em;
+    }
+    .stock-header span:nth-child(3),
+    .stock-header span:nth-child(4) { text-align: right; }
+
+    /* ── Form ── */
+    .field { margin-bottom: 14px; }
+    .field label { display: block; font-size: 13px; color: var(--muted); margin-bottom: 6px; }
+    .field input, .field select {
+      width: 100%; padding: 12px 14px;
+      border-radius: 12px; border: 1px solid var(--line);
+      background: rgba(255,255,255,0.04); color: var(--text);
+      font-size: 15px; outline: none; transition: border-color 0.2s;
+    }
+    .field input:focus { border-color: var(--accent); }
+    .field .hint { font-size: 12px; color: rgba(157,176,200,0.7); margin-top: 4px; }
+    .row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
+    /* ── Buttons ── */
+    .btn {
+      display: flex; justify-content: center; align-items: center;
+      width: 100%; min-height: 48px; padding: 0 20px;
+      border-radius: 14px; border: none; cursor: pointer;
+      font-size: 14px; font-weight: 700;
+      transition: opacity 0.15s, transform 0.1s;
+    }
+    .btn:active { transform: scale(0.97); }
+    .btn-primary {
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      color: #04111f; box-shadow: 0 12px 28px rgba(73,195,255,0.25);
+    }
+    .btn-danger {
+      background: linear-gradient(135deg, var(--red), #ff4757);
+      color: #fff; box-shadow: 0 12px 28px rgba(255,107,107,0.2);
+    }
+    .btn-outline {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid var(--line); color: var(--muted);
+    }
+    .btn:disabled { opacity: 0.4; pointer-events: none; }
+    .btn-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 4px; }
+
+    /* ── Alert Log ── */
+    .log-empty { text-align: center; padding: 24px 0; color: var(--muted); font-size: 13px; }
+    .log-item {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 10px 0; border-bottom: 1px solid var(--line); font-size: 13px;
+    }
+    .log-item:last-child { border-bottom: none; }
+    .log-item .log-time { color: var(--muted); }
+    .log-tag {
+      padding: 3px 10px; border-radius: 99px; font-size: 11px; font-weight: 700;
+    }
+    .log-tag.triggered { background: rgba(255,107,107,0.15); color: var(--red); }
+    .log-tag.called { background: rgba(43,213,118,0.12); color: var(--green); }
+
+    /* ── Toast ── */
+    .toast {
+      position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%);
+      padding: 12px 24px; border-radius: 14px;
+      background: rgba(15,25,42,0.96); border: 1px solid var(--line);
+      color: var(--text); font-size: 14px; font-weight: 600;
+      box-shadow: 0 16px 40px rgba(0,0,0,0.4);
+      opacity: 0; pointer-events: none; transition: opacity 0.3s;
+    }
+    .toast.show { opacity: 1; pointer-events: auto; }
+    .toast.error { border-color: rgba(255,107,107,0.4); }
+
+    /* ── Setup Screen ── */
+    .setup-overlay {
+      position: fixed; inset: 0; z-index: 100;
+      background:
+        radial-gradient(ellipse at 30% 20%, rgba(255,107,107,0.10), transparent 55%),
+        radial-gradient(ellipse at 70% 80%, rgba(124,92,255,0.10), transparent 50%),
+        linear-gradient(180deg, #050b16, var(--bg) 50%, #09131f);
+      display: flex; align-items: center; justify-content: center;
+      padding: 24px; overflow-y: auto;
+    }
+    .setup-overlay.hidden { display: none; }
+    .setup-box {
+      width: min(460px, 100%);
+      animation: fadeUp 0.5s ease-out;
+    }
+    @keyframes fadeUp { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; } }
+    .setup-hero { text-align: center; margin-bottom: 32px; }
+    .setup-logo {
+      width: 64px; height: 64px; border-radius: 20px;
+      background: linear-gradient(135deg, var(--red), var(--orange));
+      margin: 0 auto 16px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 28px; box-shadow: 0 16px 48px rgba(255,107,107,0.2);
+    }
+    .setup-hero h1 { font-size: 24px; font-weight: 900; }
+    .setup-hero p { font-size: 14px; color: var(--muted); margin-top: 8px; line-height: 1.6; }
+    .setup-card {
+      padding: 24px; border-radius: var(--radius);
+      border: 1px solid var(--line);
+      background: linear-gradient(180deg, rgba(14,25,42,0.95), rgba(8,17,32,0.85));
+      box-shadow: 0 32px 64px rgba(2,8,20,0.5);
+    }
+    .setup-card .section-title {
+      font-size: 13px; font-weight: 700; color: var(--accent);
+      text-transform: uppercase; letter-spacing: 0.06em;
+      margin-bottom: 14px; display: flex; align-items: center; gap: 6px;
+    }
+    .setup-card .section-title:not(:first-child) {
+      margin-top: 20px; padding-top: 18px; border-top: 1px solid var(--line);
+    }
+    .setup-input {
+      width: 100%; padding: 14px 16px;
+      border-radius: 14px; border: 2px solid var(--line);
+      background: rgba(255,255,255,0.04); color: var(--text);
+      font-size: 16px; font-weight: 600; outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .setup-input:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 4px rgba(73,195,255,0.12);
+    }
+    .setup-input::placeholder { font-weight: 400; color: rgba(157,176,200,0.4); }
+    .setup-params { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .setup-param {
+      padding: 14px; border-radius: 14px;
+      border: 1px solid var(--line); background: rgba(255,255,255,0.02);
+    }
+    .setup-param label { display: block; font-size: 12px; color: var(--muted); margin-bottom: 6px; }
+    .setup-param input {
+      width: 100%; padding: 8px 0; border: none; border-bottom: 1px solid var(--line);
+      background: transparent; color: var(--text);
+      font-size: 16px; font-weight: 700; outline: none;
+    }
+    .setup-param input:focus { border-color: var(--accent); }
+    .setup-param .unit { font-size: 12px; color: var(--muted); margin-top: 2px; }
+    .setup-submit {
+      margin-top: 20px; width: 100%; min-height: 52px;
+      border-radius: 16px; border: none; cursor: pointer;
+      font-size: 16px; font-weight: 800;
+      background: linear-gradient(135deg, var(--red), var(--orange));
+      color: #fff; box-shadow: 0 16px 40px rgba(255,107,107,0.2);
+      transition: opacity 0.15s, transform 0.1s;
+    }
+    .setup-submit:active { transform: scale(0.97); }
+    .setup-submit:disabled { opacity: 0.4; cursor: not-allowed; }
+    .setup-skip {
+      display: block; margin: 14px auto 0; padding: 8px 16px;
+      border: none; background: none; cursor: pointer;
+      font-size: 13px; color: var(--muted);
+    }
+
+    .main-content.hidden { display: none; }
+    .loading-spinner {
+      display: flex; justify-content: center; padding: 40px 0; color: var(--muted); font-size: 13px;
+    }
+
+    /* ── Footer ── */
+    .footer {
+      margin-top: 24px; text-align: center;
+      font-size: 12px; color: rgba(157,176,200,0.5); line-height: 1.6;
+    }
+  </style>
+</head>
+<body>
+  <!-- Setup Screen -->
+  <div class="setup-overlay" id="setupOverlay">
+    <div class="setup-box">
+      <div class="setup-hero">
+        <div class="setup-logo">📉</div>
+        <h1>纳斯达克 50 跌幅监控</h1>
+        <p>监控纳斯达克前 50 大股票<br/>从 52 周高点回撤超过阈值，自动打电话提醒你</p>
+      </div>
+      <div class="setup-card">
+        <div class="section-title">📱 接收电话的号码</div>
+        <input class="setup-input" id="setupPhone" type="tel" placeholder="+8613800138000" autocomplete="tel" />
+        <div class="hint" style="margin-top:8px;font-size:12px;color:rgba(157,176,200,0.6)">含国际区号，回撤越线时系统拨打此号码</div>
+
+        <div class="section-title">🔑 Twilio 凭证</div>
+        <input class="setup-input" id="setupSid" placeholder="Account SID (AC...)" style="margin-bottom:10px" />
+        <input class="setup-input" id="setupToken" type="password" placeholder="Auth Token" style="margin-bottom:10px" />
+        <input class="setup-input" id="setupFrom" type="tel" placeholder="Twilio 号码 (+1...)" />
+        <div class="hint" style="margin-top:8px;font-size:12px;color:rgba(157,176,200,0.6)">从 twilio.com/console 获取，试用账号即可</div>
+
+        <div class="section-title">⚙️ 监控参数</div>
+        <div class="setup-params">
+          <div class="setup-param">
+            <label>回撤阈值</label>
+            <input id="setupThreshold" type="number" value="30" min="5" max="80" step="5" />
+            <div class="unit">% · 从 52 周高点回撤超此值告警</div>
+          </div>
+          <div class="setup-param">
+            <label>刷新间隔</label>
+            <input id="setupInterval" type="number" value="300" min="60" max="3600" step="60" />
+            <div class="unit">秒 · 多久拉一次行情</div>
+          </div>
+        </div>
+        <button class="setup-submit" id="setupSubmit" type="button">保存并开始监控</button>
+      </div>
+      <button class="setup-skip" id="setupSkip" type="button">跳过，稍后配置 →</button>
+    </div>
+  </div>
+
+  <!-- Main Content -->
+  <div class="shell main-content hidden" id="mainContent">
+    <div class="header">
+      <div class="brand">
+        <div class="brand-dot"></div>
+        <span>跌幅监控</span>
+      </div>
+      <div class="header-right">
+        <a class="nav-link" href="./index.html">← SPY 告警</a>
+        <div class="status-pill" id="statusPill">
+          <span class="dot"></span>
+          <span id="statusText">未启动</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Hero Summary -->
+    <div class="hero-card">
+      <div class="hero-label">从 52 周高点回撤 ≥ <span id="heroThreshold">30</span>% 的股票</div>
+      <div class="hero-count safe" id="alertCount">—</div>
+      <div class="hero-sub">
+        <span id="totalDisplay">共监控 50 只</span>
+        <span>|</span>
+        <span id="warnDisplay">预警区 0 只</span>
+        <span>|</span>
+        <span id="updateTime">等待数据</span>
+      </div>
+    </div>
+
+    <!-- Metrics -->
+    <div class="metrics">
+      <div class="metric">
+        <div class="label">回撤阈值</div>
+        <div class="value" id="thresholdDisplay">30%</div>
+      </div>
+      <div class="metric">
+        <div class="label">监控状态</div>
+        <div class="value" id="monitorDisplay">未启动</div>
+      </div>
+      <div class="metric">
+        <div class="label">最大回撤</div>
+        <div class="value" id="maxDdDisplay">—</div>
+      </div>
+    </div>
+
+    <!-- Stock List -->
+    <div class="card">
+      <h2><span>📊</span> 全部股票（按回撤排序）</h2>
+      <button class="btn btn-outline" id="refreshBtn" type="button" style="margin-bottom:14px;min-height:40px;font-size:13px">
+        刷新行情数据
+      </button>
+      <div class="stock-header">
+        <span>代码</span>
+        <span>回撤进度</span>
+        <span>价格</span>
+        <span>回撤</span>
+      </div>
+      <div class="stock-grid" id="stockGrid">
+        <div class="loading-spinner">加载中…</div>
+      </div>
+    </div>
+
+    <!-- Config -->
+    <div class="card" id="configCard">
+      <h2><span>⚙️</span> 告警配置</h2>
+      <div class="field">
+        <label for="phoneInput">电话号码（含国际区号）</label>
+        <input id="phoneInput" type="tel" placeholder="+8613800138000" autocomplete="tel" />
+        <div class="hint">回撤越线时拨打此号码</div>
+      </div>
+      <div class="row2">
+        <div class="field">
+          <label for="thresholdInput">回撤阈值 (%)</label>
+          <input id="thresholdInput" type="number" value="30" min="5" max="80" step="5" />
+        </div>
+        <div class="field">
+          <label for="intervalInput">刷新间隔 (秒)</label>
+          <input id="intervalInput" type="number" value="300" min="60" max="3600" step="60" />
+        </div>
+      </div>
+      <div class="btn-row">
+        <button class="btn btn-primary" id="startBtn" type="button">启动监控</button>
+        <button class="btn btn-outline" id="testCallBtn" type="button">测试电话</button>
+      </div>
+      <button class="btn btn-danger" id="stopBtn" type="button" style="margin-top:10px;display:none">停止监控</button>
+    </div>
+
+    <!-- Alert Log -->
+    <div class="card">
+      <h2><span>📋</span> 告警记录</h2>
+      <div id="logContainer">
+        <div class="log-empty">暂无告警记录</div>
+      </div>
+    </div>
+
+    <div class="footer">
+      纳斯达克 50 跌幅监控 · 52 周高点回撤告警<br />
+      行情来源 Yahoo Finance · <a href="./index.html">返回 SPY 告警</a>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+  <script src="./nasdaq50.js"></script>
+</body>
+</html>
