@@ -212,8 +212,12 @@
   }
 
   function showTwilioSetup() {
-    const sid = prompt("输入 Twilio Account SID\n（在 twilio.com/console 获取，免费试用账户即可）", localStorage.getItem("bodongjiaojiaojiao.twilio_sid") || "");
+    const sid = prompt("输入 Twilio Account SID（以 AC 开头）\n（在 twilio.com/console 获取）", localStorage.getItem("bodongjiaojiaojiao.twilio_sid") || "");
     if (!sid) return;
+    if (!sid.trim().startsWith("AC")) {
+      showToast("Account SID 必须以 AC 开头，你可能填的是 Auth Token", true);
+      return;
+    }
     const token = prompt("输入 Twilio Auth Token", "");
     if (!token) return;
     const from = prompt("输入 Twilio 电话号码（你购买的号码，如 +12025551234）", localStorage.getItem("bodongjiaojiaojiao.twilio_from") || "");
@@ -406,7 +410,24 @@
     const sid = setupSid.value.trim();
     const token = setupToken.value.trim();
     const from = setupFrom.value.trim();
-    setupSubmit.disabled = !(phone.length >= 5 && sid && token && from);
+
+    var sidHint = setupSid.parentElement.querySelector(".sid-hint");
+    if (!sidHint) {
+      sidHint = document.createElement("div");
+      sidHint.className = "hint sid-hint";
+      setupSid.parentElement.appendChild(sidHint);
+    }
+
+    if (sid && !sid.startsWith("AC")) {
+      sidHint.textContent = "Account SID 必须以 AC 开头，请检查是否填反了";
+      sidHint.style.color = "var(--red)";
+      setupSubmit.disabled = true;
+      return;
+    } else {
+      sidHint.textContent = "";
+    }
+
+    setupSubmit.disabled = !(phone.length >= 5 && sid.startsWith("AC") && token && from);
   }
 
   [setupPhone, setupSid, setupToken, setupFrom].forEach(function (el) {
@@ -417,7 +438,14 @@
     const phone = setupPhone.value.trim();
     if (!phone) return;
 
-    localStorage.setItem("bodongjiaojiaojiao.twilio_sid", setupSid.value.trim());
+    var sid = setupSid.value.trim();
+    if (!sid.startsWith("AC")) {
+      showToast("Account SID 必须以 AC 开头，请检查", true);
+      setupSid.focus();
+      return;
+    }
+
+    localStorage.setItem("bodongjiaojiaojiao.twilio_sid", sid);
     localStorage.setItem("bodongjiaojiaojiao.twilio_token", setupToken.value.trim());
     localStorage.setItem("bodongjiaojiaojiao.twilio_from", setupFrom.value.trim());
 
