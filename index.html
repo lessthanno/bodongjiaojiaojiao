@@ -276,23 +276,23 @@
       </div>
     </div>
 
-    <!-- Auto Monitor Info -->
+    <!-- Config -->
     <div class="card" id="configCard">
-      <h2><span class="icon">🤖</span> 自动监控</h2>
-      <div style="font-size:13px;color:var(--muted);line-height:1.7;margin-bottom:14px">
-        系统通过 GitHub Actions 每 <strong style="color:var(--text)">15 分钟</strong>自动检查 SPY 行情。<br/>
-        涨跌幅超过 <strong style="color:var(--accent)">±3%</strong> 时自动拨打电话告警，无需手动操作。
+      <h2><span class="icon">⚙️</span> 告警配置</h2>
+      <div class="field">
+        <label for="phoneInput">电话号码（含国际区号）</label>
+        <input id="phoneInput" type="tel" placeholder="+8613800138000" autocomplete="tel" />
+        <div class="hint">SPY 涨跌幅触达阈值时，系统会拨打此号码叫醒你</div>
       </div>
-      <div class="metrics" style="margin-top:0">
-        <div class="metric">
-          <div class="label">告警电话</div>
-          <div class="value" style="font-size:14px">+86****2373</div>
-        </div>
-        <div class="metric">
-          <div class="label">检查频率</div>
-          <div class="value">15 分钟</div>
-        </div>
+      <div class="field">
+        <label for="thresholdInput">告警阈值 (%)</label>
+        <input id="thresholdInput" type="number" value="3" min="0.5" max="20" step="0.5" />
       </div>
+      <div class="btn-row">
+        <button class="btn btn-primary" id="startBtn" type="button">启动监控</button>
+        <button class="btn btn-outline" id="testCallBtn" type="button">测试电话</button>
+      </div>
+      <button class="btn btn-danger" id="stopBtn" type="button" style="margin-top:10px;display:none">停止监控</button>
     </div>
 
     <!-- Alert Log -->
