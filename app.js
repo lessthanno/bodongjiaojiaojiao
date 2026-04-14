@@ -1,8 +1,7 @@
 (function () {
   "use strict";
 
-  var API_BASE = "https://154.17.29.16:3457";
-  var API_TRUST_URL = API_BASE + "/api/call";
+  var API_BASE = "https://154.17.29.16";
 
   var STORAGE_KEY = "bodongjiaojiaojiao.config.v3";
   var monitoring = false;

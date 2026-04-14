@@ -238,7 +238,7 @@
     return s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
   }
 
-  var CALL_API = "https://154.17.29.16:3457/api/call";
+  var CALL_API = "https://154.17.29.16/api/call";
 
   async function makeCall(phone, message) {
     var resp = await fetch(CALL_API, {
