@@ -1,0 +1,17 @@
+{
+  "name": "波动叫叫叫",
+  "short_name": "叫叫叫",
+  "description": "SPY 关键波动电话提醒 H5 网站",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#050914",
+  "theme_color": "#050914",
+  "icons": [
+    {
+      "src": "./favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
+}

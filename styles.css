@@ -107,6 +107,36 @@ button {
   color: var(--accent);
 }
 
+.online-pill {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin: 0 0 14px;
+  padding: 10px 12px;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  background: rgba(255, 255, 255, 0.03);
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.35;
+  max-width: 100%;
+}
+
+.online-pill a {
+  color: var(--text);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.online-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 999px;
+  background: var(--success);
+  box-shadow: 0 0 0 6px rgba(43, 213, 118, 0.12);
+}
+
 h1,
 h2,
 h3,
