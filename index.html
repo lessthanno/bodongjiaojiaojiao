@@ -1,0 +1,179 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta
+      name="description"
+      content="波动叫叫叫，一个盯住 SPY 关键波动并在正式交易时段自动电话提醒的 H5 网站。"
+    />
+    <title>波动叫叫叫</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <div class="page-shell">
+      <header class="hero">
+        <nav class="topbar">
+          <div class="brand">
+            <span class="brand-mark"></span>
+            <span>波动叫叫叫</span>
+          </div>
+          <a class="ghost-link" href="#cta">立即体验</a>
+        </nav>
+
+        <section class="hero-content">
+          <div class="hero-copy">
+            <p class="eyebrow">SPY 电话预警 H5</p>
+            <h1>波动一到线，电话立刻叫醒你。</h1>
+            <p class="hero-text">
+              面向盯盘用户的移动端优先提醒站点。纽约正式交易时段内，当 SPY
+              涨跌幅触达关键阈值时，系统自动发起电话通知，不再错过大波动。
+            </p>
+            <div class="hero-actions">
+              <a class="primary-button" href="#cta">现在开始</a>
+              <a class="secondary-button" href="#scenes">看使用场景</a>
+            </div>
+            <ul class="hero-points">
+              <li>正式交易时段监控</li>
+              <li>阈值越线即刻外呼</li>
+              <li>手机端单手操作优化</li>
+            </ul>
+          </div>
+
+          <div class="phone-stage" aria-label="移动端产品预览">
+            <div class="phone-card">
+              <div class="phone-header">
+                <span>实时监控中</span>
+                <strong id="status-badge">已布防</strong>
+              </div>
+              <div class="price-block">
+                <span>SPY 最新涨跌幅</span>
+                <strong id="price-value">+2.84%</strong>
+                <small>距离电话阈值 0.16%</small>
+              </div>
+              <div class="timeline">
+                <div class="timeline-item active">
+                  <span>纽约正式交易时段</span>
+                  <b>监控开启</b>
+                </div>
+                <div class="timeline-item">
+                  <span>越线触发</span>
+                  <b>自动电话告警</b>
+                </div>
+                <div class="timeline-item">
+                  <span>接听后</span>
+                  <b>停止重拨</b>
+                </div>
+              </div>
+              <button class="mini-button" id="demo-button" type="button">模拟触发</button>
+            </div>
+          </div>
+        </section>
+      </header>
+
+      <main>
+        <section class="stats-grid" aria-label="核心指标">
+          <article class="stat-card">
+            <strong>3%</strong>
+            <span>默认关键波动阈值</span>
+          </article>
+          <article class="stat-card">
+            <strong>H5 优先</strong>
+            <span>从手机访问体验出发设计</span>
+          </article>
+          <article class="stat-card">
+            <strong>双时区</strong>
+            <span>同时展示纽约与北京时间</span>
+          </article>
+        </section>
+
+        <section class="content-section" id="scenes">
+          <div class="section-heading">
+            <p class="eyebrow">典型使用场景</p>
+            <h2>不是让你一直盯图，而是在关键时刻把你叫回来。</h2>
+          </div>
+          <div class="cards three-up">
+            <article class="feature-card">
+              <h3>上班通勤</h3>
+              <p>你在路上、会议中、或不方便看盘时，达到阈值立刻电话提醒，不必频繁打开行情软件。</p>
+            </article>
+            <article class="feature-card">
+              <h3>夜盘跨时区</h3>
+              <p>用北京时间理解自己的节奏，用纽约时间确认市场状态，避免时差和休市判断带来的误解。</p>
+            </article>
+            <article class="feature-card">
+              <h3>风控兜底</h3>
+              <p>当 SPY 进入大波动区间，系统自动补位，帮你把“看见波动”变成“及时行动”。</p>
+            </article>
+          </div>
+        </section>
+
+        <section class="content-section">
+          <div class="section-heading">
+            <p class="eyebrow">移动端体验</p>
+            <h2>一切交互都围绕手机单屏完成。</h2>
+          </div>
+          <div class="cards split">
+            <article class="feature-card emphasis">
+              <h3>单手操作路径</h3>
+              <p>核心动作只保留三个：保存配置、测试电话、暂停监控。按钮尺寸、留白与层级都按 H5 点击热区设计。</p>
+            </article>
+            <article class="feature-card">
+              <ul class="check-list">
+                <li>首屏直接看到市场状态、涨跌幅和距离阈值</li>
+                <li>配置区采用纵向表单，适合手机输入</li>
+                <li>历史记录压缩为卡片流，向下滑即可浏览</li>
+                <li>深色背景降低夜间查看刺激感</li>
+              </ul>
+            </article>
+          </div>
+        </section>
+
+        <section class="content-section">
+          <div class="section-heading">
+            <p class="eyebrow">工作流程</p>
+            <h2>三步上手，触发时自动进入电话提醒闭环。</h2>
+          </div>
+          <div class="flow-list">
+            <article class="flow-item">
+              <span>01</span>
+              <div>
+                <h3>设置手机号与阈值</h3>
+                <p>输入手机号，设置触发阈值、轮询频率、重拨间隔与最大重拨时长。</p>
+              </div>
+            </article>
+            <article class="flow-item">
+              <span>02</span>
+              <div>
+                <h3>系统进入正式交易监控</h3>
+                <p>仅在纽约正式交易时段内启用监控，盘前盘后与休市状态会有明确标识。</p>
+              </div>
+            </article>
+            <article class="flow-item">
+              <span>03</span>
+              <div>
+                <h3>触达越线即外呼</h3>
+                <p>达到阈值后系统自动发起电话。若无人接听，可按配置继续重拨，直到接通或停止条件满足。</p>
+              </div>
+            </article>
+          </div>
+        </section>
+
+        <section class="content-section" id="cta">
+          <div class="cta-card">
+            <div>
+              <p class="eyebrow">立即部署</p>
+              <h2>把波动提醒做成真正能在手机上随时打开的 H5。</h2>
+              <p>
+                这个站点已经按移动端优先布局完成，可直接作为产品展示页、活动页或落地页继续扩展。
+              </p>
+            </div>
+            <a class="primary-button" href="mailto:hello@bodongjiaojiaojiao.com">获取演示版</a>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <script src="./main.js"></script>
+  </body>
+</html>
