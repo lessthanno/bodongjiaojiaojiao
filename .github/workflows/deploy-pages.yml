@@ -5,6 +5,9 @@ on:
     branches:
       - main
   workflow_dispatch:
+  schedule:
+    # 每 15 分钟刷新一次静态行情快照（写入 artifact，不污染 git 历史）
+    - cron: "*/15 * * * *"
 
 permissions:
   contents: read
@@ -25,6 +28,19 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+
+      - name: Refresh SPY snapshot (Yahoo → quotes/last.json)
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p quotes
+          url="https://query1.finance.yahoo.com/v8/finance/chart/SPY?interval=1m&range=2d&includePrePost=true"
+          if curl -fsSL --retry 3 --retry-delay 5 -A "Mozilla/5.0 (compatible; bodongjiaojiaojiao-quote/1.0)" "$url" -o /tmp/spy-yahoo.json; then
+            python3 scripts/update_quote.py /tmp/spy-yahoo.json quotes/last.json
+          else
+            echo "::warning::Yahoo 拉取失败，沿用仓库里的 quotes/last.json（可能是占位或旧值）"
+            test -s quotes/last.json
+          fi
 
       - name: Configure Pages
         uses: actions/configure-pages@v5

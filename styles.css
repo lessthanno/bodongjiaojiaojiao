@@ -412,3 +412,136 @@ h3 {
     border-radius: 20px;
   }
 }
+
+.truth-banner {
+  margin-top: 18px;
+  padding: 14px 16px;
+  border-radius: 18px;
+  border: 1px solid rgba(255, 196, 86, 0.22);
+  background: rgba(255, 196, 86, 0.08);
+  color: #ffe6bf;
+  line-height: 1.65;
+}
+
+.truth-banner p {
+  margin: 0;
+  font-size: 14px;
+}
+
+.hero-text code,
+.fact-steps code,
+.tv-note code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  font-size: 0.92em;
+  padding: 2px 6px;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid var(--line);
+}
+
+.quote-error {
+  margin: 0 0 10px;
+  padding: 10px 12px;
+  border-radius: 14px;
+  border: 1px solid rgba(255, 117, 117, 0.35);
+  background: rgba(255, 117, 117, 0.1);
+  color: #ffb4b4;
+  font-size: 13px;
+  line-height: 1.55;
+}
+
+.price-sub {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+  margin-top: 8px;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.dot-sep {
+  width: 4px;
+  height: 4px;
+  border-radius: 999px;
+  background: rgba(148, 163, 184, 0.55);
+}
+
+.sync-muted {
+  display: block;
+  margin-top: 8px;
+  color: rgba(157, 176, 200, 0.85);
+}
+
+.threshold-row {
+  margin-top: 14px;
+  padding-top: 14px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.threshold-row label {
+  display: block;
+  margin-bottom: 8px;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.threshold-controls {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 12px;
+  align-items: center;
+}
+
+.threshold-controls input[type="range"] {
+  width: 100%;
+}
+
+.threshold-controls output {
+  font-weight: 800;
+  color: var(--text);
+  min-width: 52px;
+  text-align: right;
+}
+
+.tz-row {
+  display: grid;
+  gap: 6px;
+  margin-top: 10px;
+  color: rgba(157, 176, 200, 0.9);
+  font-size: 12px;
+}
+
+.fact-steps {
+  margin: 14px 0 0;
+  padding-left: 18px;
+  color: rgba(201, 214, 232, 0.92);
+  font-size: 13px;
+  line-height: 1.65;
+}
+
+.fact-steps li {
+  margin: 8px 0;
+}
+
+.tv-wrap {
+  border-radius: 18px;
+  border: 1px solid var(--line);
+  overflow: hidden;
+  background: rgba(8, 17, 31, 0.55);
+  min-height: 170px;
+}
+
+.tv-wrap iframe {
+  width: 100%;
+  height: 170px;
+  border: 0;
+  display: block;
+}
+
+.tv-note {
+  margin-top: 10px;
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.6;
+}

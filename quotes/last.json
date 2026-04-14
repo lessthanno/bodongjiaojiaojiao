@@ -1,0 +1,12 @@
+{
+  "symbol": "SPY",
+  "source": "yahoo",
+  "updatedAt": "2026-04-14T10:45:54.713899+00:00",
+  "latestPrice": 686.1,
+  "previousClose": 679.46,
+  "changePercent": 0.9772,
+  "regularMarketTime": 1776110401,
+  "displayNy": "2026-04-13 16:00 EDT",
+  "displayCn": "2026-04-14 04:00 CST",
+  "note": "由 GitHub Actions 在部署前拉取并写入；非浏览器直连行情源。"
+}
