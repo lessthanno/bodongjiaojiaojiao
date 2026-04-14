@@ -1,7 +1,8 @@
 (function () {
   "use strict";
 
-  var API_BASE = "http://154.17.29.16:3456";
+  var API_BASE = "https://154.17.29.16:3457";
+  var API_TRUST_URL = API_BASE + "/api/call";
 
   var STORAGE_KEY = "bodongjiaojiaojiao.config.v3";
   var monitoring = false;
@@ -233,11 +234,14 @@
   startBtn.addEventListener("click", startMonitoring);
   stopBtn.addEventListener("click", stopMonitoring);
 
+  var trustHint = $("trustHint");
+
   testCallBtn.addEventListener("click", function () {
     var phone = phoneInput.value.trim();
     if (!phone) { showToast("请先填写电话号码", true); phoneInput.focus(); return; }
     testCallBtn.disabled = true;
     testCallBtn.textContent = "拨号中...";
+    if (trustHint) trustHint.style.display = "none";
     makeCall(phone, "这是波动叫叫叫的测试电话，如果你听到了，说明电话告警功能正常工作。")
       .then(function () {
         showToast("测试电话已拨出");
@@ -249,7 +253,10 @@
         saveConfig();
         render();
       })
-      .catch(function (err) { showToast(err.message, true); })
+      .catch(function (err) {
+        showToast("请求失败，请先信任 API 证书", true);
+        if (trustHint) trustHint.style.display = "block";
+      })
       .finally(function () { testCallBtn.disabled = false; testCallBtn.textContent = "测试电话"; });
   });
 

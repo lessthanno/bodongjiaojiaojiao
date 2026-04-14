@@ -1,0 +1,38 @@
+name: Test Phone Call
+
+on:
+  workflow_dispatch:
+    inputs:
+      phone:
+        description: "Phone number to call (e.g. +8613800138000)"
+        required: true
+        type: string
+
+jobs:
+  call:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Make test call via Twilio Studio Flow
+        env:
+          TWILIO_SID: ${{ secrets.TWILIO_SID }}
+          TWILIO_TOKEN: ${{ secrets.TWILIO_TOKEN }}
+          TWILIO_FROM: ${{ secrets.TWILIO_FROM }}
+          FLOW_SID: "FW0d77674a8c9d7627bb446e834baba992"
+          PHONE: ${{ inputs.phone }}
+        run: |
+          echo "Calling ${PHONE} via Studio Flow..."
+          RESP=$(curl -s -w "\n%{http_code}" \
+            -u "${TWILIO_SID}:${TWILIO_TOKEN}" \
+            -X POST "https://studio.twilio.com/v2/Flows/${FLOW_SID}/Executions" \
+            --data-urlencode "To=${PHONE}" \
+            --data-urlencode "From=${TWILIO_FROM}")
+          HTTP_CODE=$(echo "$RESP" | tail -1)
+          BODY=$(echo "$RESP" | head -n -1)
+          echo "HTTP: $HTTP_CODE"
+          echo "$BODY" | python3 -m json.tool 2>/dev/null || echo "$BODY"
+          if [ "$HTTP_CODE" -ge 200 ] && [ "$HTTP_CODE" -lt 300 ]; then
+            echo "✅ Call triggered successfully"
+          else
+            echo "❌ Call failed"
+            exit 1
+          fi

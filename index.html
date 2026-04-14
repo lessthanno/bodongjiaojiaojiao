@@ -288,6 +288,9 @@
         <label for="thresholdInput">告警阈值 (%)</label>
         <input id="thresholdInput" type="number" value="3" min="0.5" max="20" step="0.5" />
       </div>
+      <div id="trustHint" style="margin-bottom:10px;padding:12px 14px;border-radius:12px;border:1px solid rgba(255,169,77,0.3);background:rgba(255,169,77,0.06);font-size:13px;color:var(--orange);line-height:1.6;display:none">
+        首次使用需信任 API 证书：<a href="https://154.17.29.16:3457/api/call" target="_blank" style="color:var(--accent);text-decoration:underline">点此打开</a>，在浏览器中选择"继续前往"，然后回来点测试电话。
+      </div>
       <div class="btn-row">
         <button class="btn btn-primary" id="startBtn" type="button">启动监控</button>
         <button class="btn btn-outline" id="testCallBtn" type="button">测试电话</button>
